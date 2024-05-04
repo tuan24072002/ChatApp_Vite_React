@@ -1,0 +1,104 @@
+.login{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 100px;
+    .item{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            .item_register{
+                display: flex;
+                gap: 10px;
+                &:first-child{
+                    width: 100%;
+                    justify-content: space-between;
+                    .item_child{
+                        display: flex;
+                        justify-content: space-between;
+                        width: 100%;
+                    }
+                }
+            }
+            input{
+                padding: 20px;
+                border: none;
+                outline: none;
+                background-color: rgba(17,25,40,0.6);
+                color: white;
+                border-radius: 5px;
+            }
+            label{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                &:hover{
+                    text-decoration: underline;
+                }
+                img{
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 10px;
+                    object-fit: cover;
+                    opacity: 0.6;
+                }
+                &:hover img{
+                    opacity: 0.8;
+                }
+            }
+            button{
+                width: 100%;
+                padding: 20px;
+                border: none;
+                outline: none;
+                background-color: #1f8ef1;
+                cursor: pointer;
+                color: white;
+                border-radius: 5px;
+                font-weight: 500;
+                &:hover{
+                    background-color: #329af5;
+                }
+                &:disabled{
+                    cursor: not-allowed;
+                    background-color: #1f8ff16b;
+                }
+            }
+        }
+    }
+
+    .separator{
+        position: relative;
+        height: 80%;
+        width: 2px;
+        background-color: #dddddd35;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        span{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            background-color: rgb(17, 25, 40);
+        }
+    }
+}
