@@ -40,7 +40,7 @@ const Detail = (props) => {
             <PerfectScrollbar>
                 <div className="user">
                     <img src={user?.avatar || avatar} alt="" />
-                    <h2>{user.blocked.includes(currentUser.id) ? "User" : user.name}</h2>
+                    <h2>{user?.name}</h2>
                     <p><FaCircle style={{ color: "#00FF00" }} /> Online</p>
                 </div>
                 <div className="info">
