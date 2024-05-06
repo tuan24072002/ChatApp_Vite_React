@@ -72,7 +72,7 @@ body{
   display: flex;
   @media screen and (max-width: 645px) {
     width: 100vw;
-    height: 100vh;
+    height: 90vh;
   }
 }
 .login_container{
