@@ -112,43 +112,41 @@ const Login = (props) => {
     }
     return (
         <div className='login'>
-            <PerfectScrollbar>
-                <div className="item">
-                    <h2>Welcom back...</h2>
-                    <form onSubmit={handleSubmitSignIn}>
-                        <div className="item_login">
-                            <input type="text" placeholder='Enter your Email' name='email' />
-                            <input type="password" placeholder='Enter your Password' name='password' />
+            <div className="item login_child">
+                <h2>Welcom back...</h2>
+                <form onSubmit={handleSubmitSignIn}>
+                    <div className="item_login">
+                        <input type="text" placeholder='Enter your Email' name='email' />
+                        <input type="password" placeholder='Enter your Password' name='password' />
+                    </div>
+                    <button type='submit' disabled={loading}>Sign In {loading && <FaSpinner className='loading' />}</button>
+                </form>
+            </div>
+            <div className="separator"><span>OR</span></div>
+            <div className="item register_child">
+                <h2>Create an Account</h2>
+                <form onSubmit={handleSubmitSignUp}>
+                    <div className='item_register'>
+                        <input type="text" name="yourname" placeholder='Enter your Name' />
+                        <div className='item_child'>
+                            <label htmlFor="file">
+                                <img src={avatar.url || avt} alt="" />
+                                Upload an Avatar
+                            </label>
+                            <input type="file" id='file' hidden onChange={handleAvatar} />
                         </div>
-                        <button type='submit' disabled={loading}>Sign In {loading && <FaSpinner className='loading' />}</button>
-                    </form>
-                </div>
-                <div className="separator"><span>OR</span></div>
-                <div className="item">
-                    <h2>Create an Account</h2>
-                    <form onSubmit={handleSubmitSignUp}>
-                        <div className='item_register'>
-                            <input type="text" name="yourname" placeholder='Enter your Name' />
-                            <div className='item_child'>
-                                <label htmlFor="file">
-                                    <img src={avatar.url || avt} alt="" />
-                                    Upload an Avatar
-                                </label>
-                                <input type="file" id='file' hidden onChange={handleAvatar} />
-                            </div>
-                        </div>
-                        <div className='item_register'>
-                            <input type="text" placeholder='Enter your Username' name='username' />
-                            <input type="text" placeholder='Enter your Email' name='email' />
-                        </div>
-                        <div className='item_register'>
-                            <input type="password" placeholder='Enter your Password' name='password' />
-                            <input type="password" placeholder='Enter your Confirm Password' name='confirmpassword' />
-                        </div>
-                        <button type='submit' disabled={loading}>Sign Up {loading && <FaSpinner className='loading' />}</button>
-                    </form>
-                </div>
-            </PerfectScrollbar>
+                    </div>
+                    <div className='item_register'>
+                        <input type="text" placeholder='Enter your Username' name='username' />
+                        <input type="text" placeholder='Enter your Email' name='email' />
+                    </div>
+                    <div className='item_register'>
+                        <input type="password" placeholder='Enter your Password' name='password' />
+                        <input type="password" placeholder='Enter your Confirm Password' name='confirmpassword' />
+                    </div>
+                    <button type='submit' disabled={loading}>Sign Up {loading && <FaSpinner className='loading' />}</button>
+                </form>
+            </div>
         </div>
     )
 }

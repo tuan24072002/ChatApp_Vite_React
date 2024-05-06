@@ -10,6 +10,7 @@ import { auth } from './lib/firebase'
 import { useUserStore } from './lib/userStore'
 import { FaSpinner } from "react-icons/fa";
 import { useChatStore } from './lib/useChatStore'
+
 NProgress.configure({
   showSpinner: false,
   trickleSpeed: 50,
@@ -44,6 +45,7 @@ const App = () => {
               }
             </>
           </div> :
+
           <div className="login_container">
             <Login />
           </div>
