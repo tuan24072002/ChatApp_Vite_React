@@ -1,3 +1,7 @@
+.scroll_login{
+    display: flex;
+}
+
 .login{
     width: 100%;
     height: 100%;
@@ -6,7 +10,6 @@
     align-items: center;
     padding: 1rem 0;
     gap: 100px;
-    overflow: scroll;
     @media screen and (max-width: 1535px) {
         flex-direction: column;
         gap: 10px;
@@ -141,6 +144,10 @@
             width: 100%;
             height: 2px;
             margin: 2rem auto;
+        }
+        @media screen and (max-width: 645px) {
+            margin: 5rem auto;
+            
         }
     }
 }

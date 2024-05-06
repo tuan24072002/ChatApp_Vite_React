@@ -78,7 +78,6 @@ body{
   backdrop-filter: blur(19px) saturate(180%);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.125);
-  display: flex;
   @media screen and (max-width: 645px) {
     width: 100vw;
     height: 100vh;
