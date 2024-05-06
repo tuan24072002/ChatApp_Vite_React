@@ -5,9 +5,10 @@ import { toast } from 'react-toastify'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth, db } from '../../lib/firebase'
 import { doc, setDoc } from "firebase/firestore";
-import upload from '../../lib/upload'
+import { uploadImage } from '../../lib/upload'
 import NProgress from 'nprogress';
 import { FaSpinner } from "react-icons/fa";
+import PerfectScrollbar from 'react-perfect-scrollbar'
 const Login = (props) => {
     const [avatar, setAvatar] = useState({
         file: null,
@@ -81,7 +82,7 @@ const Login = (props) => {
                 //Register
                 const res = await createUserWithEmailAndPassword(auth, email, password)
                 //Upload Avatar
-                const imgUrl = await upload(avatar.file)
+                const imgUrl = await uploadImage(avatar.file)
                 //Save Data to Collection
                 await setDoc(doc(db, "users", res.user.uid), {
                     username,
@@ -111,39 +112,43 @@ const Login = (props) => {
     }
     return (
         <div className='login'>
-            <div className="item">
-                <h2>Welcom back...</h2>
-                <form onSubmit={handleSubmitSignIn}>
-                    <input type="text" placeholder='Enter your Email' name='email' />
-                    <input type="password" placeholder='Enter your Password' name='password' />
-                    <button type='submit' disabled={loading}>Sign In {loading && <FaSpinner className='loading' />}</button>
-                </form>
-            </div>
-            <div className="separator"><span>OR</span></div>
-            <div className="item">
-                <h2>Create an Account</h2>
-                <form onSubmit={handleSubmitSignUp}>
-                    <div className='item_register'>
-                        <input type="text" name="yourname" placeholder='Enter your Name' />
-                        <div className='item_child'>
-                            <label htmlFor="file">
-                                <img src={avatar.url || avt} alt="" />
-                                Upload an Avatar
-                            </label>
-                            <input type="file" id='file' hidden onChange={handleAvatar} />
+            <PerfectScrollbar>
+                <div className="item">
+                    <h2>Welcom back...</h2>
+                    <form onSubmit={handleSubmitSignIn}>
+                        <div className="item_login">
+                            <input type="text" placeholder='Enter your Email' name='email' />
+                            <input type="password" placeholder='Enter your Password' name='password' />
                         </div>
-                    </div>
-                    <div className='item_register'>
-                        <input type="text" placeholder='Enter your Username' name='username' />
-                        <input type="text" placeholder='Enter your Email' name='email' />
-                    </div>
-                    <div className='item_register'>
-                        <input type="password" placeholder='Enter your Password' name='password' />
-                        <input type="password" placeholder='Enter your Confirm Password' name='confirmpassword' />
-                    </div>
-                    <button type='submit' disabled={loading}>Sign Up {loading && <FaSpinner className='loading' />}</button>
-                </form>
-            </div>
+                        <button type='submit' disabled={loading}>Sign In {loading && <FaSpinner className='loading' />}</button>
+                    </form>
+                </div>
+                <div className="separator"><span>OR</span></div>
+                <div className="item">
+                    <h2>Create an Account</h2>
+                    <form onSubmit={handleSubmitSignUp}>
+                        <div className='item_register'>
+                            <input type="text" name="yourname" placeholder='Enter your Name' />
+                            <div className='item_child'>
+                                <label htmlFor="file">
+                                    <img src={avatar.url || avt} alt="" />
+                                    Upload an Avatar
+                                </label>
+                                <input type="file" id='file' hidden onChange={handleAvatar} />
+                            </div>
+                        </div>
+                        <div className='item_register'>
+                            <input type="text" placeholder='Enter your Username' name='username' />
+                            <input type="text" placeholder='Enter your Email' name='email' />
+                        </div>
+                        <div className='item_register'>
+                            <input type="password" placeholder='Enter your Password' name='password' />
+                            <input type="password" placeholder='Enter your Confirm Password' name='confirmpassword' />
+                        </div>
+                        <button type='submit' disabled={loading}>Sign Up {loading && <FaSpinner className='loading' />}</button>
+                    </form>
+                </div>
+            </PerfectScrollbar>
         </div>
     )
 }

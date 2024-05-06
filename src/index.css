@@ -5,9 +5,55 @@
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
+:root {
+  /*Background*/
+  --bg-color-light: #ddd;
+  --bg-color-dark: black;
+  --bg-color-C6E2FF:#C6E2FF;
+  --bg-color-97FFFF:#97FFFF;
+  --bg-color-FFE4C4:#FFE4C4;
+  --bg-color-FFE4E1:#FFE4E1;
+  --bg-color-63B8FF:#63B8FF;
+  --bg-color-54FF9F:#54FF9F;
 
+  --bg-color-container: rgba(17,25,40,0.75);
+
+  /*Text Message*/
+  --bg-color-message:#5183fe;
+  --text-color-message: white;
+  --file-color-message: azure;
+
+  /*Text Detail*/
+  --text-color-detail: white;
+}
+
+[data-theme="dark"] {
+  --bg-color: var(--bg-color-dark); 
+  --bg-color-container: rgba(118, 124, 135, 0.613);
+}
+[data-theme="light"] {
+  --bg-color: var(--bg-color-light); 
+}
+[data-theme="C6E2FF"] {
+  --bg-color: var(--bg-color-C6E2FF); 
+}
+[data-theme="97FFFF"] {
+  --bg-color: var(--bg-color-97FFFF); 
+}
+[data-theme="FFE4C4"] {
+  --bg-color: var(--bg-color-FFE4C4); 
+}
+[data-theme="FFE4E1"] {
+  --bg-color: var(--bg-color-FFE4E1); 
+}
+[data-theme="63B8FF"] {
+  --bg-color: var(--bg-color-63B8FF); 
+}
+[data-theme="54FF9F"] {
+  --bg-color: var(--bg-color-54FF9F); 
+}
 body{
-  background-image: url("./assets/images/bg.jpg");
+  background-color: var(--bg-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,11 +65,24 @@ body{
 .container{
   width: 80vw;
   height: 90vh;
-  background-color: rgba(17,25,40,0.75);
+  background-color: var(--bg-color-container);
   backdrop-filter: blur(19px) saturate(180%);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.125);
   display: flex;
+}
+.login_container{
+  width: 80vw;
+  height: 90vh;
+  background-color: var(--bg-color-container);
+  backdrop-filter: blur(19px) saturate(180%);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  display: flex;
+  @media screen and (max-width: 645px) {
+    width: 100vw;
+    height: 100vh;
+  }
 }
 .loading_page{
   padding: 50px;
@@ -31,8 +90,8 @@ body{
   border-radius: 10px;
   background-color: rgba(17, 25, 40, 0.9);
 }
+
 .loading{
-  /* color: #00d4ff; */
   color: white;
   animation: spin 1s infinite linear;
 }

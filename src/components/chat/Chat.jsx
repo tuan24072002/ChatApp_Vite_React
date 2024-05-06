@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './Chat.scss'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { FaCircle } from "react-icons/fa";
+import { FaCircle, FaFile } from "react-icons/fa";
 import avatar from '../../assets/images/avatar.png'
 import phone from '../../assets/images/phone.png'
 import video from '../../assets/images/video.png'
@@ -18,8 +18,11 @@ import { useChatStore } from '../../lib/useChatStore';
 import { FaWindowClose } from "react-icons/fa";
 import { BiHappy } from "react-icons/bi";
 import { useUserStore } from '../../lib/userStore';
-import upload from '../../lib/upload';
+import { uploadFile, uploadImage } from '../../lib/upload';
 import { FaSpinner } from "react-icons/fa";
+import { IoIosCloseCircle } from "react-icons/io";
+import { toast } from 'react-toastify';
+import { IoCaretBackOutline } from "react-icons/io5";
 const Chat = (props) => {
     const { setOpenDetail, openDetail } = props
     const [loading, setLoading] = useState(false)
@@ -27,7 +30,7 @@ const Chat = (props) => {
     const [chat, setChat] = useState(null)
     const [openImage, setOpenImage] = useState(false)
     const [message, setMessage] = useState('')
-    const [image, setImage] = useState({
+    const [fileMessage, setFileMessage] = useState({
         file: null,
         url: "",
     })
@@ -50,15 +53,23 @@ const Chat = (props) => {
     }, [chatId])
 
     const handleUploadImage = (e) => {
-        if (e.target.files[0]) {
-            setImage({
+        if (e.target.files[0] && (
+            e.target.files[0].name.split('.').pop() === 'jpg' ||
+            e.target.files[0].name.split('.').pop() === 'png' ||
+            e.target.files[0].name.split('.').pop() === 'gif'
+        )) {
+            setFileMessage({
                 file: e.target.files[0],
                 url: URL.createObjectURL(e.target.files[0])
+            })
+        } else {
+            setFileMessage({
+                file: e.target.files[0],
+                url: e.target.files[0].name
             })
         }
         scrollLastMessage();
     }
-
     const handleSendMessage = async () => {
         setLoading(true)
         if (message === '' && image.url === '') {
@@ -66,17 +77,40 @@ const Chat = (props) => {
             scrollLastMessage();
             return;
         }
+        if (fileMessage && fileMessage.file?.size > 2097152) {
+            toast.warning(`File size must under 2MiB !`)
+            setLoading(false);
+            scrollLastMessage();
+            return;
+        }
         let imgUrl = null;
+        let fileUrl = null;
         try {
 
-            if (image.file) {
-                imgUrl = await upload(image.file);
+            if (fileMessage.file &&
+                (
+                    fileMessage.file.name.split('.').pop() === 'jpg' ||
+                    fileMessage.file.name.split('.').pop() === 'png' ||
+                    fileMessage.file.name.split('.').pop() === 'gif'
+                )) {
+                imgUrl = await uploadImage(fileMessage.file);
+            } else if (fileMessage.file &&
+                (
+                    fileMessage.file.name.split('.').pop() === 'pdf' ||
+                    fileMessage.file.name.split('.').pop() === 'xlsx' ||
+                    fileMessage.file.name.split('.').pop() === 'doc' ||
+                    fileMessage.file.name.split('.').pop() === 'docx' ||
+                    fileMessage.file.name.split('.').pop() === 'txt'
+                )) {
+                fileUrl = await uploadFile(fileMessage.file);
             }
             await updateDoc(doc(db, "chats", chatId), {
                 messages: arrayUnion({
                     senderId: currentUser.id,
                     text: message,
                     image: imgUrl ? imgUrl : "",
+                    fileName: fileUrl ? fileMessage.url : "",
+                    fileUrl: fileUrl ? fileUrl : "",
                     createdAt: new Date(),
                 })
             })
@@ -88,8 +122,27 @@ const Chat = (props) => {
                 if (userChatSnapshot) {
                     const userChatData = userChatSnapshot.data();
                     const chatIndex = userChatData.chats.findIndex(i => i.chatId === chatId)
-                    userChatData.chats[chatIndex].lastMessage = message !== '' ? message : imgUrl;
+                    userChatData.chats[chatIndex].lastMessage = message;
                     userChatData.chats[chatIndex].isSeen = id === currentUser.id ? true : false;
+                    if (imgUrl !== null) {
+                        if (!userChatData.chats[chatIndex].imgList) {
+                            userChatData.chats[chatIndex].imgList = [];
+                        }
+                        userChatData.chats[chatIndex].imgList.push({
+                            imgUrl: imgUrl,
+                            updateAt: Date.now()
+                        });
+                    }
+                    if (fileUrl !== null) {
+                        if (!userChatData.chats[chatIndex].fileList) {
+                            userChatData.chats[chatIndex].fileList = [];
+                        }
+                        userChatData.chats[chatIndex].fileList.push({
+                            fileUrl: fileUrl,
+                            fileName: fileMessage.url,
+                            updateAt: Date.now()
+                        });
+                    }
                     userChatData.chats[chatIndex].updateAt = Date.now();
 
                     await updateDoc(userChatRef, {
@@ -100,7 +153,7 @@ const Chat = (props) => {
         } catch (error) {
             console.log(error);
         } finally {
-            setImage({
+            setFileMessage({
                 file: null,
                 url: ""
             })
@@ -115,9 +168,33 @@ const Chat = (props) => {
         console.log(isCurrentUserBlocked);
         console.log(user);
     }
+    const handleClickBack = () => {
+        closeChat();
+        const elements = document.getElementsByClassName('list');
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].style.display = 'block';
+        }
+        setOpenDetail(false);
+    }
+    const handleClickViewDetail = () => {
+        setOpenDetail(!openDetail);
+        if (window.matchMedia('(max-width: 1350px)').matches) {
+            const elements = document.getElementsByClassName('chat');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.display = 'none';
+            }
+            const elements_2 = document.getElementsByClassName('detail');
+            for (let i = 0; i < elements.length; i++) {
+                elements_2[i].style.display = 'flex';
+            }
+        }
+    }
     return (
         <div className="chat">
             <div className="top">
+                <div className='iconBack' id='iconBack' onClick={() => handleClickBack()}>
+                    <i><IoCaretBackOutline /></i>
+                </div>
                 <div className="user">
                     <img src={user?.avatar || avatar} alt="" />
                     <div className="texts">
@@ -128,7 +205,7 @@ const Chat = (props) => {
                 <div className="icons">
                     <img src={phone} alt="" />
                     <img src={video} alt="" />
-                    <img src={info} alt="" onClick={() => setOpenDetail(!openDetail)} />
+                    <img src={info} alt="" onClick={() => handleClickViewDetail()} />
                 </div>
                 {
                     !openDetail &&
@@ -148,10 +225,13 @@ const Chat = (props) => {
                                     }
                                     <div className="texts">
                                         {
-                                            message.image && <img src={message.image} alt="" onClick={() => setOpenImage(true)} />
+                                            message.image && <a href={message.image} target='_blank'><img src={message.image} alt="" onClick={() => setOpenImage(true)} /></a>
                                         }
                                         {
-                                            message.text !== '' && <p>{message.text}</p>
+                                            message.text !== '' && <p className='textMessage' id='textMessage'>{message.text}</p>
+                                        }
+                                        {
+                                            message.fileUrl && <a href={message.fileUrl} className='file'><span>{message.fileName}</span> <i className='icon_file'><FaFile /></i></a>
                                         }
                                         {/* <span>1 min ago</span> */}
                                     </div>
@@ -161,15 +241,6 @@ const Chat = (props) => {
                             : <div className="message_empty">
                                 <p>Don't have any message! You can start this message now! Have funny </p><BiHappy size={'2rem'} />
                             </div>
-                    }
-                    {
-                        image.url && (
-                            <div className="message own">
-                                <div className="texts">
-                                    <img src={image.url} alt="" />
-                                </div>
-                            </div>
-                        )
                     }
                     <div id='intoView'></div>
                 </div>
@@ -192,7 +263,37 @@ const Chat = (props) => {
                 </div>
                 <button className='sendButton' onClick={() => handleSendMessage()} disabled={isCurrentUserBlocked || isReceiverBlocked || loading}>{loading ? <FaSpinner className='loading' /> : <IoSend />}</button>
             </div>
-        </div>
+            {
+                fileMessage.url !== '' && (
+                    fileMessage.file.name.split('.').pop() === 'jpg' ||
+                    fileMessage.file.name.split('.').pop() === 'png' ||
+                    fileMessage.file.name.split('.').pop() === 'gif'
+                ) && (
+                    <div className="preview">
+                        <div className="image">
+                            <img src={fileMessage.url} alt="" />
+                            <IoIosCloseCircle className='close' onClick={() => setFileMessage({ file: null, url: "" })} />
+                        </div>
+                    </div>
+                )
+            }
+            {
+                fileMessage.url !== '' && (
+                    fileMessage.file.name.split('.').pop() === 'pdf' ||
+                    fileMessage.file.name.split('.').pop() === 'xlsx' ||
+                    fileMessage.file.name.split('.').pop() === 'doc' ||
+                    fileMessage.file.name.split('.').pop() === 'docx' ||
+                    fileMessage.file.name.split('.').pop() === 'txt'
+                ) && (
+                    <div className="preview">
+                        <div className="file">
+                            <p>{fileMessage.file.name}</p> <FaFile size={'1.5rem'} />
+                            <IoIosCloseCircle className='close' onClick={() => setFileMessage({ file: null, url: "" })} />
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     )
 }
 

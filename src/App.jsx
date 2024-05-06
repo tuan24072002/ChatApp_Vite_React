@@ -30,21 +30,26 @@ const App = () => {
     return <div className="loading_page">Loading... <FaSpinner className='loading' /></div>
   }
   return (
-    <div className='container'>
+    <>
       {
-        currentUser !== null ? <>
-          <List />
-          {
-            chatId && <Chat setOpenDetail={setOpenDetail} openDetail={openDetail} />
-          }
-          {
-            chatId && openDetail && <Detail />
-          }
-        </> :
-          <Login />
+        currentUser !== null ?
+          <div className='container'>
+            <>
+              <List />
+              {
+                chatId && <Chat setOpenDetail={setOpenDetail} openDetail={openDetail} />
+              }
+              {
+                chatId && openDetail && <Detail setOpenDetail={setOpenDetail} openDetail={openDetail} />
+              }
+            </>
+          </div> :
+          <div className="login_container">
+            <Login />
+          </div>
       }
       <Notify />
-    </div>
+    </>
   )
 }
 

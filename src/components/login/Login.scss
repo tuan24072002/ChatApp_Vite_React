@@ -3,30 +3,63 @@
     height: 100%;
     display: flex;
     align-items: center;
+    padding-top: 1rem;
     gap: 100px;
+    @media screen and (max-width: 1535px) {
+       flex-direction: column;
+       gap: 10px;
+       justify-content: space-between;
+        padding-bottom: 1rem;
+    }
     .item{
         flex: 1;
         display: flex;
         flex-direction: column;
+        justify-content: center;
         align-items: center;
         gap: 20px;
+        height: auto;
+        width: 100%;
         form{
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 20px;
+            @media screen and (max-width: 645px) {
+                width: 90vw;
+            }
             .item_register{
                 display: flex;
                 gap: 10px;
-                &:first-child{
+                width: 100%;
+                justify-content: space-between;
+                @media screen and (max-width: 645px) {
                     width: 100%;
+                    display: grid;
+                    grid-template-columns: minmax(10rem, 1fr)
+                }
+                .item_child{
+                    display: flex;
                     justify-content: space-between;
-                    .item_child{
-                        display: flex;
-                        justify-content: space-between;
-                        width: 100%;
+                    width: 100%;
+                    border: 1px solid rgba(17,25,40,0.6);
+                    border-radius: 5px;
+                    img{
+                        height: 100%;
+                        max-width: auto;
+                        border-radius: 5px;
                     }
+                }
+            }
+            .item_login{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                @media screen and (max-width: 645px) {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr)
                 }
             }
             input{
@@ -36,6 +69,9 @@
                 background-color: rgba(17,25,40,0.6);
                 color: white;
                 border-radius: 5px;
+                @media screen and (max-width: 645px) {
+                    // padding: 0;
+                }
             }
             label{
                 width: 100%;
@@ -99,6 +135,11 @@
             align-items: center;
             z-index: 999;
             background-color: rgb(17, 25, 40);
+        }
+        @media screen and (max-width: 1535px) {
+            width: 100%;
+            height: 2px;
+            margin: 3rem auto;
         }
     }
 }

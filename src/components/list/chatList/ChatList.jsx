@@ -10,6 +10,7 @@ import { useUserStore } from '../../../lib/userStore'
 import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '../../../lib/firebase'
 import { useChatStore } from '../../../lib/useChatStore'
+import { FaFile } from "react-icons/fa";
 const ChatList = () => {
     const [addMode, setAddMode] = useState(false)
     const [chats, setChats] = useState([])
@@ -56,6 +57,12 @@ const ChatList = () => {
         if (element) {
             element.scrollIntoView();
         }
+        if (window.matchMedia('(max-width: 1350px)').matches) {
+            const elements = document.getElementsByClassName('list');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.display = 'none';
+            }
+        }
     }
 
     const filterChats = chats.filter(i => i.user.name.toLowerCase().includes(inputSearch.toLowerCase()))
@@ -84,7 +91,7 @@ const ChatList = () => {
                                     <img src={value.user?.avatar || avatar} alt="" />
                                     <div className="text">
                                         <span>{value.user.blocked.includes(currentUser.id) ? "User" : value.user?.name}</span>
-                                        <p>{value.lastMessage.length > 50 ? value.lastMessage.substring(0, 50) + '...' : value.lastMessage}</p>
+                                        <p>{value.lastMessage !== '' ? (value.lastMessage.length > 50 ? `${value.lastMessage.slice(0, 50)} ...` : value.lastMessage) : <span>File sent <FaFile /></span>}</p>
                                     </div>
                                 </div>
                             )
