@@ -91,7 +91,7 @@ const ChatList = () => {
                                     <img src={value.user?.avatar || avatar} alt="" />
                                     <div className="text">
                                         <span>{value.user.blocked.includes(currentUser.id) ? "User" : value.user?.name}</span>
-                                        <p>{value.lastMessage !== '' ? (value.lastMessage.length > 50 ? `${value.lastMessage.slice(0, 50)} ...` : value.lastMessage) : <span>File sent <FaFile /></span>}</p>
+                                        <p>{value.lastMessage !== '' ? (value.lastMessage.length > 50 ? `${value.lastMessage.slice(0, 50)} ...` : value.lastMessage) : value.lastMessage === '' ? "Don't have any message" : <span>File sent <FaFile /></span>}</p>
                                     </div>
                                 </div>
                             )

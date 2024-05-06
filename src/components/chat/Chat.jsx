@@ -23,11 +23,13 @@ import { FaSpinner } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 import { toast } from 'react-toastify';
 import { IoCaretBackOutline } from "react-icons/io5";
+import more from '../../assets/images/more.png'
 const Chat = (props) => {
     const { setOpenDetail, openDetail } = props
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [chat, setChat] = useState(null)
+    const [moreOption, setMoreOption] = useState(false);
     const [openImage, setOpenImage] = useState(false)
     const [message, setMessage] = useState('')
     const [fileMessage, setFileMessage] = useState({
@@ -247,12 +249,25 @@ const Chat = (props) => {
             </PerfectScrollbar>
             <div className="bottom">
                 <div className="icons">
-                    <label htmlFor="image">
-                        <img src={img} alt="" />
-                    </label>
-                    <input type="file" name="image" id='image' hidden onChange={handleUploadImage} disabled={isCurrentUserBlocked || isReceiverBlocked || loading} />
-                    <img src={camera} alt="" onClick={handleCamera} />
-                    <img src={microphone} alt="" />
+                    <img src={more} alt="" onClick={() => setMoreOption(!moreOption)} className='more' />
+                    {
+                        moreOption && <div className="option">
+                            <label htmlFor="image">
+                                <img src={img} alt="" />
+                            </label>
+                            <input type="file" name="image" id='image' hidden onChange={handleUploadImage} disabled={isCurrentUserBlocked || isReceiverBlocked || loading} />
+                            <img src={camera} alt="" onClick={handleCamera} />
+                            <img src={microphone} alt="" />
+                        </div>
+                    }
+                    <div className="option_responsive">
+                        <label htmlFor="image">
+                            <img src={img} alt="" />
+                        </label>
+                        <input type="file" name="image" id='image' hidden onChange={handleUploadImage} disabled={isCurrentUserBlocked || isReceiverBlocked || loading} />
+                        <img src={camera} alt="" onClick={handleCamera} />
+                        <img src={microphone} alt="" />
+                    </div>
                 </div>
                 <input type="text" placeholder={isCurrentUserBlocked || isReceiverBlocked ? "You cannot send a message" : 'Aa'} value={message} onChange={(e) => setMessage(e.target.value)} disabled={isCurrentUserBlocked || isReceiverBlocked || loading} />
                 <div className="emoji">

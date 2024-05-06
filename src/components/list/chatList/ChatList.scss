@@ -5,6 +5,12 @@
         align-items: center;
         gap: 20px;
         padding: 20px;
+        @media screen and (max-width: 545px) {
+            gap: 10px;
+            max-height: 40px;
+            max-width: 100%;
+            padding: 5px;
+        }
         .searchBar{
             flex: 1;
             background-color: rgba(17, 25, 40, 0.5);
@@ -24,6 +30,9 @@
                 width: 20px;
                 height: 20px;
                 cursor: pointer;
+            }
+            @media screen and (max-width: 545px) {
+                gap: 10px;
             }
         }
         .add{
@@ -58,6 +67,24 @@
             p{
                 font-size: 14px;
                 font-weight: 300;
+            }
+        }
+        @media screen and (max-width: 545px) {
+            gap: 10px;
+            padding: 15px;
+            img{
+                width: 40px;
+                height: 40px;
+            }
+            .text{
+                span{
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                p{
+                    font-size: 12px;
+                    font-weight: 300;
+                }
             }
         }
     }
